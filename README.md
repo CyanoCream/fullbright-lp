@@ -4,15 +4,31 @@ Landing page Full Bright Indonesia (TOEFL ITP) yang di-wiring ke boilerplate PBM
 
 ## Yang dikerjakan
 
-- `resources/js/pages/demo/ctwa.tsx`: file FE yang diberikan (`LP.tsx`) dipasang sebagai halaman CTWA, aset di `public/assets/`.
+- Halaman CTWA (`resources/js/pages/demo/ctwa.tsx`) dibangun dari file FE yang diberikan (`LP.tsx`), dengan aset di `public/assets/`.
 - Semua CTA (37) memakai `TrackedCTA` dengan `zone`, `action`, dan `label`. WhatsApp menghasilkan `whatsapp_lead`, checkout `member.fullbrightindonesia.com` menghasilkan `direct_checkout`, anchor menghasilkan `intent`. Section penting punya `id` untuk `section_view`.
-- Nomor WhatsApp utama dibaca dari `WHATSAPP_NUMBER` (prop `whatsappUrl`).
+- Nomor WhatsApp utama dibaca dari `WHATSAPP_NUMBER`, link checkout per paket dari `config/landing.php` (`CHECKOUT_URL_*`).
 - Favicon, title, dan meta description mengikuti referensi.
+
+### Struktur kode
+
+```
+app/Http/Controllers/LandingPageController.php   route "/" (props: whatsappUrl, checkoutUrls)
+config/landing.php                               link checkout per paket
+resources/js/
+├─ pages/demo/ctwa.tsx                            komposisi section + state lightbox/popup
+├─ layouts/landing-layout.tsx                     banner, navbar sticky, footer, WhatsApp melayang
+├─ components/landing/                            satu file per section + shared, overlays, styles
+├─ data/landing.ts                                konten (FAQ, paket, review, logo, fitur LMS, dll.)
+└─ hooks/use-landing-page.ts                      countdown, scroll, bubble WA, return popup, lightbox
+```
+
+Refactor dari satu file ~5.000 baris ke komponen diverifikasi dengan membandingkan DOM sebelum/sesudah pada 13 state interaktif (default, mode tutor, FAQ, lightbox, popup, survey, dsb.) di 1440px & 390px, ditambah pixel-diff full page.
 
 ## Perbedaan dengan referensi yang diperbaiki di file FE
 
 | Area | Masalah di file FE | Perbaikan |
 |---|---|---|
+| Layout | `</div>` wrapper halaman tertutup setelah section agitation sehingga banner & navbar sticky ikut hilang saat scroll | Wrapper membungkus seluruh halaman (via `LandingLayout`) |
 | Global CSS | Rule `a { color }` tidak di-layer sehingga menimpa utility Tailwind (teks CTA merah di atas merah) | Dipindah ke `@layer base` + `scroll-margin-top` untuk anchor |
 | Testimoni | JSX `<img onClick={() = />` rusak (build gagal) | Diperbaiki |
 | FAQ | Chip kategori membandingkan `FAQ_CATEGORIES[-1]` sehingga tidak pernah aktif | Pakai index yang benar |
