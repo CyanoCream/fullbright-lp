@@ -1,3 +1,48 @@
+# Trial Case: Full Bright Indonesia TOEFL Landing Page
+
+Landing page Full Bright Indonesia (TOEFL ITP) yang di-wiring ke boilerplate PBM (Laravel 13 + Inertia + React) dalam mode **CTWA**. Referensi desain: https://fullbrightindonesia.netlify.app/ (fallback: https://toefl.fullbrightindonesia.org/c10-lp).
+
+## Yang dikerjakan
+
+- `resources/js/pages/demo/ctwa.tsx`: file FE yang diberikan (`LP.tsx`) dipasang sebagai halaman CTWA, aset di `public/assets/`.
+- Semua CTA (37) memakai `TrackedCTA` dengan `zone`, `action`, dan `label`. WhatsApp menghasilkan `whatsapp_lead`, checkout `member.fullbrightindonesia.com` menghasilkan `direct_checkout`, anchor menghasilkan `intent`. Section penting punya `id` untuk `section_view`.
+- Nomor WhatsApp utama dibaca dari `WHATSAPP_NUMBER` (prop `whatsappUrl`).
+- Favicon, title, dan meta description mengikuti referensi.
+
+## Perbedaan dengan referensi yang diperbaiki di file FE
+
+| Area | Masalah di file FE | Perbaikan |
+|---|---|---|
+| Global CSS | Rule `a { color }` tidak di-layer sehingga menimpa utility Tailwind (teks CTA merah di atas merah) | Dipindah ke `@layer base` + `scroll-margin-top` untuk anchor |
+| Testimoni | JSX `<img onClick={() = />` rusak (build gagal) | Diperbaiki |
+| FAQ | Chip kategori membandingkan `FAQ_CATEGORIES[-1]` sehingga tidak pernah aktif | Pakai index yang benar |
+| Hero | CTA utama `34px 76px / 27px`, CTA sekunder `3px 9px / 10px`, subheadline center, rating line center | `14px 28px / 16px`, rata kiri |
+| Agitation | Padding section `8px`, H2 `clamp(40px,6.4vw,68px)`, paragraf `11px` rata kiri | `56px`, `clamp(28px,3.6vw,42px)`, `16px` center |
+| Value | Badge hijau di luar palet | Badge merah seperti section lain |
+| Proof | `<font color="#7c3aed">` ungu, container `980px`, rasio `16/9`, label skor `11px` rata kiri, CTA sekunder kecil | Merah `#d70808`, `420px`, `1/1`, `18px`, ukuran CTA standar |
+| LMS | Padding section `210px/190px` | `80px` |
+| Why Full Bright | Badge & ikon biru, padding kartu `2px 4px`, deskripsi `8px` / `17px center`, CTA `30px 64px / 24px` | Merah, `16px`, `12px`, ukuran CTA standar |
+| Pricing | Paragraf intro `10px` (kedua mode) | `16px` |
+| FAQ | Header rata kiri | Center |
+| Survey | Eyebrow rata kanan, H2 `clamp(28px,5.6vw,38px)` | Rata kiri, `clamp(20px,3.6vw,23px)` |
+| Bubble WA | Nama "Mr. Choiri" tapi membuka nomor Ms. Fini | "Ms. Fini" |
+
+Hasil dicek dengan screenshot full-page (1440px & 390px) dan pixel-diff per section terhadap referensi.
+
+## Menjalankan lokal
+
+```bash
+composer install && npm install
+cp .env.example .env && php artisan key:generate   # set DB_CONNECTION
+php artisan migrate
+php artisan pbm:create-admin
+npm run build && php artisan serve
+```
+
+Landing page: `http://localhost:8000`. Dashboard analytics: `http://localhost:8000/admin`.
+
+---
+
 # PBM Landing Page Boilerplate
 
 Boilerplate ini adalah fondasi siap pakai untuk membuat landing page dengan Laravel, Inertia, React, analytics internal, dashboard A/B testing, dan integrasi marketing. **Boilerplate** berarti project dasar yang dapat disalin dan disesuaikan untuk klien baru tanpa membangun sistem pendukung dari awal.
