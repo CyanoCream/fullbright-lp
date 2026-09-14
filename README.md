@@ -1,5 +1,7 @@
 # Trial Case: Full Bright Indonesia TOEFL Landing Page
 
+**Demo:** https://fullbright-lp-production.up.railway.app · Dashboard analytics: https://fullbright-lp-production.up.railway.app/admin
+
 Landing page Full Bright Indonesia (TOEFL ITP) yang di-wiring ke boilerplate PBM (Laravel 13 + Inertia + React) dalam mode **CTWA**. Referensi desain: https://fullbrightindonesia.netlify.app/ (fallback: https://toefl.fullbrightindonesia.org/c10-lp).
 
 ## Yang dikerjakan
@@ -56,6 +58,10 @@ npm run build && php artisan serve
 ```
 
 Landing page: `http://localhost:8000`. Dashboard analytics: `http://localhost:8000/admin`.
+
+## Deployment
+
+Aplikasi dikemas sebagai Docker image (`Dockerfile`, PHP 8.4 + Apache) dan dipublikasikan ke `ghcr.io/cyanocream/fullbright-lp` oleh GitHub Actions. Saat container start, `docker/entrypoint.sh` menyesuaikan port dari `PORT`, menulis CA MySQL dari `DB_SSL_CA_BASE64` (untuk MySQL managed seperti Aiven), menjalankan migrasi, lalu cache config/route/view. Demo berjalan di Railway dengan database MySQL Aiven.
 
 ---
 
