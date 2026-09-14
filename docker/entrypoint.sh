@@ -12,6 +12,12 @@ if [ -n "${DB_SSL_CA}" ]; then
 fi
 
 php artisan migrate --force
+
+# Platforms without shell access (e.g. Render free): provision the admin account from env.
+if [ -n "${ADMIN_EMAIL}" ] && [ -n "${ADMIN_PASSWORD}" ]; then
+    php artisan pbm:create-admin --name="${ADMIN_NAME:-Admin}" --email="${ADMIN_EMAIL}" --password="${ADMIN_PASSWORD}"
+fi
+
 php artisan optimize
 
 exec apache2-foreground

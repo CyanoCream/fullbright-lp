@@ -42,6 +42,12 @@ services:
         sync: false
       - key: DB_SSL_CA
         sync: false
+      - key: ADMIN_NAME
+        value: Admin Full Bright
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
       - key: CLIENT_ID
         value: fullbright-indonesia
       - key: PROJECT_MODE
