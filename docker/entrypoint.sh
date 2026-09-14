@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e
 
+# mod_php requires the prefork MPM; make sure no other MPM is enabled (some builders add one).
+rm -f /etc/apache2/mods-enabled/mpm_event.* /etc/apache2/mods-enabled/mpm_worker.*
+[ -e /etc/apache2/mods-enabled/mpm_prefork.load ] || a2enmod mpm_prefork >/dev/null
+
 # Hosting platforms inject the port to listen on.
 sed -ri "s/^Listen [0-9]+/Listen ${PORT}/" /etc/apache2/ports.conf
 sed -ri "s/<VirtualHost \*:[0-9]+>/<VirtualHost *:${PORT}>/" /etc/apache2/sites-available/000-default.conf

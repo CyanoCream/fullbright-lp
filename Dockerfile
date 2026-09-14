@@ -5,7 +5,8 @@ FROM php:8.4-apache AS base
 
 COPY --from=mlocati/php-extension-installer:2 /usr/bin/install-php-extensions /usr/local/bin/
 RUN install-php-extensions pdo_mysql intl bcmath pcntl zip gmp opcache \
-    && a2enmod rewrite headers \
+    && { a2dismod -f mpm_event mpm_worker || true; } \
+    && a2enmod mpm_prefork rewrite headers \
     && echo 'ServerName localhost' > /etc/apache2/conf-available/servername.conf && a2enconf servername \
     && sed -ri 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf \
     && sed -ri 's!AllowOverride None!AllowOverride All!g' /etc/apache2/apache2.conf \
